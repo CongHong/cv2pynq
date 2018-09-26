@@ -3,10 +3,12 @@ import os
 import shutil
 import cv2pynq
 
-if 'BOARD' not in os.environ or os.environ['BOARD'] != 'Pynq-Z1':
-    print("Only supported on a Pynq Z1 Board")
+if (os.environ['BOARD'] in ['Pynq-Z1', 'Pynq-Z2']):
+    print("Board Correctly!")
+else:
+    print("Only supported on a Pynq Board")
     exit(1)
-
+    
 # Notebook copy
 WORK_DIR = os.path.dirname(os.path.realpath(__file__))
 src_nb = WORK_DIR + '/notebooks'
