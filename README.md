@@ -12,7 +12,7 @@ Install by typing:
 ```
 git clone https://github.com/wbrueckner/cv2pynq.git   
 cd cv2pynq/   
-pip3.6 install -e .   
+pip3 install -e .   
 ``` 
 into the terminal on your Pynq-Z1 board.   
 The library comes with a [jupyter notebook](https://github.com/wbrueckner/cv2pynq/blob/master/notebooks/cv2PYNQ%20-%20Get%20Started.ipynb) to demonstrate its usage and capabilities.
