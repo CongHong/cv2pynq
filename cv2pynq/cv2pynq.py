@@ -282,7 +282,7 @@ class cv2pynq():
             self.dmaIn.transfer(self.cmaBuffer1)
             self.dmaOut.transfer(src)
             self.dmaIn.wait()
-        else:#pipeline the copy to contiguous memory and filter calculation in hardware
+        else:#pipeline the copy to contiguous memory and filter calculation in hardware    
             if src.nbytes < 184800: #440x420
                 self.partitions = 1
             elif src.nbytes < 180000: #600x300
@@ -296,27 +296,32 @@ class cv2pynq():
             chunks_len = int(src.nbytes / (self.partitions))
             self.cmaBuffer0.nbytes = chunks_len
             self.cmaBuffer2.nbytes = chunks_len
-            self.copyNto(src,self.cmaBuffer0,chunks_len)
-            for i in range(1,self.partitions):
+            #self.copyNto(src,self.cmaBuffer0,chunks_len)
+            self.copyNto(self.cmaBuffer0, src, chunks_len)
+            for i in range(1, self.partitions):
                 if i % 2 == 1:
                     while not self.dmaOut.idle and not self.dmaOut._first_transfer:
                         pass 
                     self.dmaOut.transfer(self.cmaBuffer0)
-                    self.copyNtoOff(src ,self.cmaBuffer2,chunks_len, i*chunks_len, 0)
+                    #self.copyNtoOff(src ,self.cmaBuffer2,chunks_len, i*chunks_len, 0)
+                    self.copyNtoOff(self.cmaBuffer2, src, chunks_len, 0, i*chunks_len)
                 else:
                     while not self.dmaOut.idle and not self.dmaOut._first_transfer:
                         pass 
                     self.dmaOut.transfer(self.cmaBuffer2)
-                    self.copyNtoOff(src ,self.cmaBuffer0,chunks_len,  i*chunks_len, 0)
+                    #self.copyNtoOff(src ,self.cmaBuffer0,chunks_len,  i*chunks_len, 0)
+                    self.copyNtoOff(self.cmaBuffer0, src, chunks_len,  0, i*chunks_len)
             while not self.dmaOut.idle and not self.dmaOut._first_transfer:
                 pass 
             self.dmaOut.transfer(self.cmaBuffer2)
             rest = src.nbytes % self.partitions 
-            if rest != 0: #cleanup any remaining data and send it to HW
-                self.copyNtoOff(src ,self.cmaBuffer0,chunks_len, self.partitions*chunks_len, 0)
+            if rest > 0: #cleanup any remaining data and send it to HW
+                #self.copyNtoOff(src ,self.cmaBuffer0,chunks_len, self.partitions*chunks_len, 0)
+                self.copyNtoOff(self.cmaBuffer0, src, chunks_len, 0, self.partitions*chunks_len)
                 while not self.dmaOut.idle and not self.dmaOut._first_transfer:
                     pass 
                 self.dmaOut.transfer(self.cmaBuffer0)
+                rest -= chunks_len
             self.dmaIn.wait()
         ret = np.ndarray(src.shape,src.dtype)
         self.copyNto(ret,self.cmaBuffer1,ret.nbytes)
