@@ -10,12 +10,13 @@ are located in the contiguous memory of the chip.
 ## Get Started
 Install by typing: 
 ```
-git clone https://github.com/wbrueckner/cv2pynq.git   
-cd cv2pynq/   
-pip3 install -e .   
+# on PYNQ v2.3
+sudo pip3 install --upgrade git+https://github.com/xupsh/cv2pynq.git
+# on PYNQ v2.2 and earlier
+sudo pip3.6 install --upgrade git+https://github.com/xupsh/cv2pynq.git  
 ``` 
-into the terminal on your Pynq-Z1 board.   
-The library comes with a [jupyter notebook](https://github.com/wbrueckner/cv2pynq/blob/master/notebooks/cv2PYNQ%20-%20Get%20Started.ipynb) to demonstrate its usage and capabilities.
+into the terminal on your Pynq-Z1/Pynq-Z2 board.   
+The library comes with a [jupyter notebook](https://github.com/xupsh/cv2pynq/blob/master/notebooks/cv2PYNQ%20-%20Get%20Started.ipynb) to demonstrate its usage and capabilities.
 You find the notebook in the cv2PYNQ folder of your home tree after installation.
 
 Link to YouTube Video:
